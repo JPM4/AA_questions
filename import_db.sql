@@ -50,16 +50,17 @@ VALUES
 INSERT INTO
   question_follows (user_id, question_id)
 VALUES
-  (4, 2), (2, 1), (1, 1), (3, 2);
+  (4, 2), (2, 1), (1, 1), (3, 2), (1, 2);
 
 INSERT INTO
   replies (body, user_id, question_id, parent_id)
 VALUES
   ('However many you can make.', 4, 2, NULL),
   ("I'd like to make a movie about basketball.", 2, 2, 1),
-  ("Oh I just looked it up and the sky is blue because of the absorption
+  ("Oh I just looked it up and the sky is blue because of the absorption \
     frequency of gases in the atmosphere.", 1, 1, NULL),
-  ("I'd like to see that movie!", 1, 2, 2);
+  ("I'd like to see that movie!", 1, 2, 2),
+  ("Me too!", 3, 2, 4);
 
 INSERT INTO
   question_likes (user_id, question_id)
