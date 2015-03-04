@@ -1,3 +1,5 @@
+#unfinished
+
 module Save
   def save
     return update unless @id.nil?
@@ -7,7 +9,7 @@ module Save
 
     QuestionsDatabase.instance.execute(<<-SQL, *params_eval)
       INSERT INTO
-        #{self.class.downcase} (#{params.join(", ")})
+        users (#{params.join(", ")})
       VALUES
         (?#{", ?" * (params.count - 1) })
     SQL
