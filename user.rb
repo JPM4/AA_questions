@@ -43,4 +43,24 @@ class User
   def followed_questions
     QuestionFollow.followed_questions_for_user_id(@id)
   end
+
+  def liked_questions
+    QuestionLike.liked_questions_for_user_id(@id)
+  end
+
+  def average_karma
+    result = QuestionsDatabase.instance.execute(<<-SQL, @id)
+      SELECT
+        CAST(COUNT(question_likes.user_id) AS FLOAT) /
+        COUNT(DISTINCT(questions.id))
+      FROM
+        questions
+      LEFT OUTER JOIN
+        question_likes ON questions.id = question_likes.question_id
+      WHERE
+        questions.author_id = ?
+    SQL
+
+    result[0].values.first.nil? ? 0 : result[0].values.first
+  end
 end

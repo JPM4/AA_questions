@@ -70,6 +70,6 @@ class QuestionFollow
   end
 
   def self.most_followed(n)
-    QuestionFollow.most_followed_questions(n).last
+    QuestionFollow.most_followed_questions(n)[n - 1]
   end
 end
