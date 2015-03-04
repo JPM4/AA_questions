@@ -14,4 +14,20 @@ class QuestionsDatabase < SQLite3::Database
     self.results_as_hash = true
     self.type_translation = true
   end
+
+  def save
+    return update unless @id.nil?
+
+    params = self.instance_variables.drop(1)
+    QuestionsDatabase.instance.execute(<<-SQL, *params)
+      INSERT INTO
+        users (fname, lname)
+      VALUES
+        (?, ?)
+    SQL
+
+    @id = QuestionsDatabase.instance.last_insert_row_id
+  end
+
+
 end

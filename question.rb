@@ -9,6 +9,33 @@ class Question
     @author_id = params['author_id']
   end
 
+  def save
+    return update unless @id.nil?
+
+    params = [@title, @body, @author_id]
+
+    QuestionsDatabase.instance.execute(<<-SQL, *params)
+      INSERT INTO
+        questions (title, body, author_id)
+      VALUES
+        (?, ?, ?)
+    SQL
+
+    @id = QuestionsDatabase.instance.last_insert_row_id
+  end
+
+  def update
+    params = [@title, @body, @author_id, @id]
+    QuestionsDatabase.instance.execute(<<-SQL, *params)
+      UPDATE
+        questions
+      SET
+        title = ?, body = ?, author_id = ?
+      WHERE
+        id = ?
+    SQL
+  end
+
   def self.find_by_id(search_id)
     result = QuestionsDatabase.instance.execute(<<-SQL, search_id)
       SELECT
@@ -53,5 +80,5 @@ class Question
 
   def num_likes
     QuestionLike.num_likes_for_question_id(@id)
-  end  
+  end
 end

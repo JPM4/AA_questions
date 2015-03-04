@@ -10,6 +10,33 @@ class Reply
     @user_id = params['user_id']
   end
 
+  def save
+    return update unless @id.nil?
+
+    params = [@body, @question_id, @parent_id, @user_id]
+
+    QuestionsDatabase.instance.execute(<<-SQL, *params)
+      INSERT INTO
+        replies (body, question_id, parent_id, user_id)
+      VALUES
+        (?, ?, ?, ?)
+    SQL
+
+    @id = QuestionsDatabase.instance.last_insert_row_id
+  end
+
+  def update
+    params = [@body, @question_id, @parent_id, @user_id, @id]
+    QuestionsDatabase.instance.execute(<<-SQL, *params)
+      UPDATE
+        replies
+      SET
+        body = ?, question_id = ?, parent_id = ?, user_id = ?
+      WHERE
+        id = ?
+    SQL
+  end
+
   def self.find_by_id(search_id)
     result = QuestionsDatabase.instance.execute(<<-SQL, search_id)
       SELECT
